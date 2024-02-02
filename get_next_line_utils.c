@@ -6,7 +6,7 @@
 /*   By: sslaoui <sslaoui@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/15 12:56:26 by sslaoui           #+#    #+#             */
-/*   Updated: 2024/01/26 11:15:55 by sslaoui          ###   ########.fr       */
+/*   Updated: 2024/01/31 22:42:15 by sslaoui          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,7 +18,7 @@ size_t	ft_strlen(const char *s)
 
 	i = 0;
 	if (!s)
-		return (i);
+		return (0);
 	while (s[i])
 		i++;
 	return (i);
@@ -66,7 +66,6 @@ char	*ft_strjoin(char *s1, char *s2)
 	while (s2[j])
 		str[i++] = s2[j++];
 	str[i] = '\0';
-	//free((void *)s2);
 	return (str);
 }
 
@@ -105,7 +104,7 @@ char	*ft_strchr(const char *s, int c)
 
 	i = 0;
 	if (!s)
-		return NULL;
+		return (NULL);
 	while (*(s + i))
 	{
 		if ((char)c == *(s + i))
@@ -113,18 +112,4 @@ char	*ft_strchr(const char *s, int c)
 		i++;
 	}
 	return (NULL);
-}
-
-int	check_for_newline(char *s)
-{
-	int		i;
-
-	i = 0;
-	while (s[i])
-	{
-		if (s[i] == '\n')
-			return 0;
-		i++;
-	}
-	return (1);
 }

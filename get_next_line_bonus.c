@@ -1,112 +1,87 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   get_next_line_bonus.c                              :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: sslaoui <sslaoui@student.42.fr>            +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2024/01/31 22:45:00 by sslaoui           #+#    #+#             */
+/*   Updated: 2024/02/02 01:30:43 by sslaoui          ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "get_next_line_bonus.h"
-#include <stdio.h>
-#include <fcntl.h>
 
-char    *ft_get_line(char **Var)
+char	*ft_get_line(char **static_var)
 {
-    char    *tmp;
-    char    *line;
-    int     i;
+	char	*tmp;
+	char	*line;
+	int		i;
 
-    i = ft_strchr(*Var, '\n') - *Var;
-    line = malloc(i + 2);
-    if (!line)
-    {
-        if (*Var)
-            return (free(*Var), NULL);
-        return NULL;
-    }
-    i = 0;
-    while ((*Var)[i] != '\n')
-    {
-        line[i] = (*Var)[i];
-        i++;
-    }
-    line[i] = '\n';
-    line[i + 1] = '\0';
-    tmp = *Var;
-    i = ft_strchr(*Var, '\n') - *Var;
-    *Var = ft_substr(*Var, i + 1, ft_strlen(*Var) - i + 1);
-    return (free(tmp) , line);
-}
-int     read_function(int fd, char **Var)
-{
-    char *buffer;
-    char *tmp;
-    ssize_t buffersize;
-
-    buffersize = 1;
-    buffer = malloc(BUFFER_SIZE + 1);
-    if (!buffer)
-        return 0;
-    while (buffersize > 0  && !ft_strchr(Var[fd], '\n'))
-    {
-        buffersize = read(fd, buffer, BUFFER_SIZE);
-        if (buffersize > 0)
-        {
-            buffer[buffersize] = '\0';
-            tmp = *Var;
-            *Var = ft_strjoin(*Var, buffer);
-            free(tmp);
-        }
-    }
-    free(buffer);
-    return (buffersize);
+	i = ft_strchr(*static_var, '\n') - *static_var;
+	line = malloc(i + 2);
+	if (!line)
+	{
+		if (*static_var)
+			return (free(*static_var), *static_var = NULL, NULL);
+		return (NULL);
+	}
+	i = 0;
+	while ((*static_var)[i] != '\n')
+	{
+		line[i] = (*static_var)[i];
+		i++;
+	}
+	line[i] = '\n';
+	line[i + 1] = '\0';
+	tmp = *static_var;
+	i = ft_strchr(*static_var, '\n') - *static_var;
+	*static_var = ft_substr(*static_var, i + 1, ft_strlen(*static_var) - i + 1);
+	return (free(tmp), line);
 }
 
-char    *get_next_line(int fd)
+int	read_function(int fd, char **static_var)
 {
-    static char *Var[OPEN_MAX];
-    char *buffer;
-    char *tmp;
+	char	*buffer;
+	char	*tmp;
+	ssize_t	buffersize;
 
-    buffer = NULL;
-    if (fd < 0)
-        return NULL;
-    if (BUFFER_SIZE <= 0 || fd >= OPEN_MAX || read(fd, buffer, 0) < 0 )
-    {
-        if (Var[fd])
-            return(free(Var[fd]), Var[fd] = NULL);
-        return NULL;
-    }
-    if (Var[fd] && ft_strchr(Var[fd], '\n'))
-        return (ft_get_line(&Var[fd]));
-    if(!ft_strchr(Var[fd], '\n'))
-        read_function(fd, &Var[fd]);
-    if (Var[fd] && ft_strchr(Var[fd], '\n'))
-        return(ft_get_line(&Var[fd]));
-    if  (Var[fd] && *(Var[fd]))
-        return (tmp = ft_strjoin(Var[fd], ""), free(Var[fd]), Var[fd] = NULL, tmp);
-    tmp = Var[fd];
-    Var[fd] = NULL;
-    return (free(tmp), Var[fd]);
+	buffer = malloc(BUFFER_SIZE + 1);
+	if (!buffer)
+		return (free(*static_var), *static_var = NULL, 0);
+	buffersize = read(fd, buffer, BUFFER_SIZE);
+	buffer[buffersize] = '\0';
+	tmp = *static_var;
+	*static_var = ft_strjoin(*static_var, buffer);
+	free(tmp);
+	free(buffer);
+	return (buffersize);
 }
-// // // // // void l()
-// // // // // {
-// // // // // 	system("leaks a.out");
-// // // // // }
-// int main()
-// {
-//     char c = 0; 
-//     int fd = open("42_with_nl", O_CREAT | O_RDONLY, 0700);
-//     read(fd, &c, 1); 
-// if (BUFFER_SIZE == 42) {
-// 		char c = 0; read(fd, &c, 1); check(c == '1'); ++iTest;
-// 	    get_next_line(fd, NULL);}
-// 	else {
-// 		 /* 2 */ gnl(fd, "1");
-// 		 /* 3 */ gnl(fd, NULL);})
-//     // char *line= get_next_line(fd);
-//     // while(line)
-//     // {
-//     //     // i++;
-//     //     // if (i == 3)
-//     //     //     close(3);
-//     //     printf("%s", line);
-//     //     free(line);
-//     //     line = get_next_line(3);
-//     // }
-//     //  line = get_next_line(3);
-//     //  printf("%s",line);
-// //   atexit(l);
-// }
+
+char	*get_next_line(int fd)
+{
+	static char	*str[OPEN_MAX];
+	char		*buffer;
+	char		*t;
+	int			count;
+
+	count = 0;
+	buffer = NULL;
+	if (fd < 0 || BUFFER_SIZE <= 0 || fd >= OPEN_MAX || read(fd, buffer, 0) < 0)
+	{
+		if (str[fd])
+			return (free(str[fd]), str[fd] = NULL);
+		return (NULL);
+	}
+	if (str[fd] && ft_strchr(str[fd], '\n'))
+		return (ft_get_line(&str[fd]));
+	while (read_function(fd, &str[fd]) && !ft_strchr(str[fd], '\n'))
+		count++;
+	if (str[fd] && ft_strchr(str[fd], '\n'))
+		return (ft_get_line(&str[fd]));
+	if (str[fd] && *str[fd])
+		return (t = ft_strjoin(str[fd], ""), free(str[fd]), str[fd] = NULL, t);
+	t = str[fd];
+	str[fd] = NULL;
+	return (free(t), str[fd]);
+}

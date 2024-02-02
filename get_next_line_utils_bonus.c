@@ -5,8 +5,8 @@
 /*                                                    +:+ +:+         +:+     */
 /*   By: sslaoui <sslaoui@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2023/12/15 12:56:26 by sslaoui           #+#    #+#             */
-/*   Updated: 2024/01/07 19:14:38 by sslaoui          ###   ########.fr       */
+/*   Created: 2024/01/31 22:45:54 by sslaoui           #+#    #+#             */
+/*   Updated: 2024/01/31 22:47:01 by sslaoui          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,7 +18,7 @@ size_t	ft_strlen(const char *s)
 
 	i = 0;
 	if (!s)
-		return (i);
+		return (0);
 	while (s[i])
 		i++;
 	return (i);
@@ -43,7 +43,7 @@ char	*ft_strdup(const char *s1)
 	return (str);
 }
 
-char	*ft_strjoin(char const *s1, char const *s2)
+char	*ft_strjoin(char *s1, char *s2)
 {
 	char			*str;
 	unsigned int	i;
@@ -101,16 +101,14 @@ char	*ft_substr(char const *s, unsigned int start, size_t len)
 char	*ft_strchr(const char *s, int c)
 {
 	int		i;
-	char	a;
 
-	a = (char )c;
 	i = 0;
 	if (!s)
 		return (NULL);
-	while (s[i])
+	while (*(s + i))
 	{
-		if (a == s[i])
-			return ((char *)&s[i]);
+		if ((char)c == *(s + i))
+			return ((char *)(s + i));
 		i++;
 	}
 	return (NULL);
